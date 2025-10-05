@@ -11,7 +11,7 @@ namespace FocusFounder.Services
     /// <summary>
     /// Manages all office-related operations
     /// </summary>
-    public class OfficeService : MonoBehaviour, IOfficeService, ISaveable
+    public class OfficeService : Singleton<OfficeService>, IOfficeService, ISaveable
     {
         private List<Office> _allOffices = new();
         private Dictionary<string, Office> _officeById = new();
@@ -106,6 +106,8 @@ namespace FocusFounder.Services
                 // Would need to reconstruct offices from save data
             }
         }
+
+        public void InitializeOnSaver() => Services.Get<SaveService>().RegisterSavableObjects(this);
 
         [System.Serializable]
         private struct OfficeServiceSaveData

@@ -7,6 +7,7 @@ namespace FocusFounder.Domain
 {
     using Core;
     using Data;
+    using FocusFounder.Services;
 
     [Serializable]
     public sealed class Office : ISaveable
@@ -87,6 +88,11 @@ namespace FocusFounder.Domain
                 _id = data.id;
                 // Definition and staff should be resolved by services
             }
+        }
+
+        public void InitializeOnSaver()
+        {
+            Singleton<SaveService>.Instance.RegisterSavableObjects(this);
         }
 
         [Serializable]

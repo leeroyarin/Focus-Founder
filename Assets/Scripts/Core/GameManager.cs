@@ -12,12 +12,13 @@ namespace FocusFounder.Core
     public class GameManager : MonoBehaviour
     {
         [Header("Service References")]
-        [SerializeField] private FocusService focusService;
-        [SerializeField] private SimulationClock simulationClock;
-        [SerializeField] private EconomyService economyService;
-        [SerializeField] private EmployeeService employeeService;
-        [SerializeField] private OfficeService officeService;
-        [SerializeField] private TaskService taskService;
+        [field: SerializeField] private SimulationClock simulationClock { get; set; }
+        [field: SerializeField] private FocusService focusService {get; set;}
+        [field: SerializeField] private EconomyService economyService {get; set;}
+        [field: SerializeField] private EmployeeService employeeService {get; set;}
+        [field: SerializeField] private OfficeService officeService {get; set;}
+        [field: SerializeField] private TaskService taskService {get; set;}
+        [field: SerializeField] private SaveService saveService {get; set;}
 
         [Header("UI References")]
         [SerializeField] private CompanyDashboardVM dashboardViewModel;
@@ -35,6 +36,13 @@ namespace FocusFounder.Core
             // Initialize core systems first
             _eventBus = new EventBus();
             Services.Register<IEventBus>(_eventBus);
+            if(focusService == null) focusService = SingletonExtensions.GetSingletonInstance<FocusService>(focusService);
+            if(simulationClock == null) simulationClock = SingletonExtensions.GetSingletonInstance<SimulationClock>(simulationClock);
+            if(economyService == null) economyService = SingletonExtensions.GetSingletonInstance<EconomyService>(economyService);
+            if(employeeService == null) employeeService = SingletonExtensions.GetSingletonInstance<EmployeeService>(employeeService);
+            if(officeService == null) officeService = SingletonExtensions.GetSingletonInstance<OfficeService>(officeService);
+            if(taskService == null) taskService = SingletonExtensions.GetSingletonInstance<TaskService>(taskService);
+
         }
 
         private void Start()
@@ -128,6 +136,9 @@ namespace FocusFounder.Core
 
             yield return null;
 
+            // 7.1 Initializw Save Service 
+            Services.Register<SaveService>(saveService);
+
             // 8. Load saved game data
             yield return StartCoroutine(LoadGameData());
 
@@ -189,8 +200,7 @@ namespace FocusFounder.Core
         public void SaveGame()
         {
             Debug.Log("Saving game...");
-            // Save implementation would go here
-            // Would iterate through all ISaveable services and capture their state
+            Singleton<SaveService>.Instance.SaveAllSavableObjectDatas();
         }
 
         public void LoadGame()

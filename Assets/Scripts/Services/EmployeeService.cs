@@ -7,11 +7,13 @@ namespace FocusFounder.Services
     using Core;
     using Domain;
     using Data;
+    using System;
+    using Unity.Mathematics;
 
     /// <summary>
     /// Handles all employee management operations
     /// </summary>
-    public class EmployeeService : MonoBehaviour, IEmployeeService, ISaveable
+    public class EmployeeService : Singleton<EmployeeService>, IEmployeeService, ISaveable
     {
         private List<Employee> _allEmployees = new();
         private Dictionary<string, Employee> _employeeById = new();
@@ -119,10 +121,38 @@ namespace FocusFounder.Services
             }
         }
 
+        public void InitializeOnSaver()
+        {
+            Services.Get<SaveService>().RegisterSavableObjects(this);
+        }
+
         [System.Serializable]
         private struct EmployeeServiceSaveData
         {
             public object[] employees;
         }
+
+        
+    }
+    public class SaveService : Singleton<SaveService>
+    {
+        private List<ISaveable> saveables = new List<ISaveable>();
+
+
+        public void RegisterSavableObjects(ISaveable objectsToSave)
+        {
+            saveables.Add(objectsToSave);
+        }
+
+        public void UnregisterSavableObjects(ISaveable saveable)
+        {
+            saveables.Remove(saveable);
+        }
+
+        public void SaveAllSavableObjectDatas()
+        {
+            saveables.ForEach(saveable => { saveable.CaptureState(); });
+        }
+
     }
 }

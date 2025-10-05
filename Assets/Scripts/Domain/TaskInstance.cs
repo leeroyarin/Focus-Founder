@@ -5,6 +5,7 @@ namespace FocusFounder.Domain
 {
     using Core;
     using Data;
+    using FocusFounder.Services;
 
     [Serializable]
     public sealed class TaskInstance : ISaveable
@@ -58,6 +59,11 @@ namespace FocusFounder.Domain
                 _totalDuration = data.totalDuration;
                 // Definition should be resolved by ContentService
             }
+        }
+
+        void ISaveable.InitializeOnSaver()
+        {
+            Services.Get<SaveService>().RegisterSavableObjects(this);
         }
 
         [Serializable]

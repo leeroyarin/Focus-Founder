@@ -12,7 +12,7 @@ namespace FocusFounder.Services
     /// <summary>
     /// Manages task creation, queuing, and assignment to employees
     /// </summary>
-    public class TaskService : MonoBehaviour, ITaskService
+    public class TaskService : Singleton<TaskService>, ITaskService
     {
         [SerializeField] private BaseYieldStrategy defaultYieldStrategy;
 

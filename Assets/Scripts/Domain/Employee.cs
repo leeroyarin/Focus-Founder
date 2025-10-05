@@ -133,6 +133,11 @@ namespace FocusFounder.Domain
             }
         }
 
+        public void InitializeOnSaver()
+        {
+            Singleton<SaveService>.Instance.RegisterSavableObjects( this );
+        }
+
         [Serializable]
         private struct EmployeeSaveData
         {

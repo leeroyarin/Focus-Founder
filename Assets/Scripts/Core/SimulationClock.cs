@@ -7,7 +7,7 @@ namespace FocusFounder.Core
     /// Central clock that controls all simulation timing
     /// Only advances when the game is focused and running
     /// </summary>
-    public sealed class SimulationClock : MonoBehaviour, ISimulationClock
+    public sealed class SimulationClock : Singleton<SimulationClock>, ISimulationClock
     {
         private bool _running = true;
         private IFocusService _focusService;

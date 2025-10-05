@@ -8,7 +8,7 @@ namespace FocusFounder.Services
     /// <summary>
     /// Manages all economic transactions and currency balances
     /// </summary>
-    public class EconomyService : MonoBehaviour, IEconomyService, ISaveable
+    public class EconomyService : Singleton<EconomyService>, IEconomyService, ISaveable
     {
         [SerializeField] private CurrencyBalance _startingBalance = new CurrencyBalance(100f, 0f, 0f);
 
@@ -63,6 +63,11 @@ namespace FocusFounder.Services
                 _currentBalance = balance;
                 OnBalanceChanged?.Invoke(_currentBalance);
             }
+        }
+
+        public void InitializeOnSaver()
+        {
+            Services.Get<SaveService>().RegisterSavableObjects(this);
         }
     }
 }

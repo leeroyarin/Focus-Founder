@@ -11,4 +11,6 @@ namespace FocusFounder.Focus
         TimeSpan CurrentSessionDuration { get; }
         TimeSpan TotalFocusTimeToday { get; }
     }
+
+    public interface ISingletonable { }
 }
